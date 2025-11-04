@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zone</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Georgia', 'Times New Roman', 'Arial', sans-serif;
+        }
+
+        body {
+            background: 
+                radial-gradient(circle at 10% 20%, #0a0800 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, #1a1400 0%, transparent 40%),
+                linear-gradient(135deg, #000000 0%, #0a0800 50%, #000000 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 10px;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '☥';
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 150px;
+            color: rgba(184, 148, 31, 0.08);
+            z-index: -1;
+            animation: slowPulse 8s ease-in-out infinite;
+        }
+
+        @keyframes slowPulse {
+            0%, 100% { opacity: 0.05; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.1; transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        .floating-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #b8941f;
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 6s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-25px) rotate(180deg); }
+        }
+
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: fadeOut 0.5s ease-in-out 2.5s forwards;
+        }
+
+        @keyframes fadeOut {
+            to { opacity: 0; visibility: hidden; }
+        }
+
+        .splash-logo {
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .splash-logo img {
+            width: 150px;
+            height: 150px;
+            border: 2px solid #b8941f;
+            border-radius: 25px;
+            box-shadow: 0 0 50px rgba(184, 148, 31, 0.5);
+        }
+
+        .container {
+            background: 
+                linear-gradient(135deg, rgba(0,0,0,0.98) 0%, rgba(20,15,0,0.95) 100%);
+            border-radius: 15px;
+            padding: 25px 20px;
+            max-width: 100%;
+            width: 100%;
+            border: 1px solid #3a2e00;
+            position: relative;
+            box-shadow: 
+                0 20px 40px rgba(0,0,0,0.8),
+                inset 0 1px 0 rgba(184, 148, 31, 0.1),
+                0 0 60px rgba(184, 148, 31, 0.1);
+            overflow: hidden;
+            margin-top: 50px;
+            display: none;
+            animation: slideUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(45deg, transparent 65%, rgba(184, 148, 31, 0.05) 100%);
+            pointer-events: none;
+        }
+
+        .egyptian-border {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border: 1px solid #b8941f;
+            border-radius: 10px;
+            opacity: 0.4;
+            pointer-events: none;
+            animation: borderGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes borderGlow {
+            from { box-shadow: 0 0 20px rgba(184, 148, 31, 0.1); }
+            to { box-shadow: 0 0 40px rgba(184, 148, 31, 0.3); }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 25px;
+            position: relative;
+        }
+
+        .header::before {
+            content: '𓁩𓋹𓆣';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 20px;
+            color: #b8941f;
+            opacity: 0.6;
+            animation: hieroglyphFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes hieroglyphFloat {
+            0%, 100% { transform: translateX(-50%) translateY(0px); }
+            50% { transform: translateX(-50%) translateY(-5px); }
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 10%;
+            width: 80%;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                transparent, 
+                #b8941f 20%, 
+                #d4b150 50%, 
+                #b8941f 80%, 
+                transparent
+            );
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        .header h1 {
+            color: #d4b150;
+            font-size: 42px;
+            font-weight: normal;
+            margin-bottom: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-shadow: 0 2px 15px rgba(184, 148, 31, 0.4);
+            animation: titleGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            from { text-shadow: 0 2px 15px rgba(184, 148, 31, 0.4); }
+            to { text-shadow: 0 2px 25px rgba(184, 148, 31, 0.7), 0 0 30px rgba(184, 148, 31, 0.3); }
+        }
+
+        .header p {
+            color: #b8941f;
+            font-size: 16px;
+            font-weight: 300;
+            opacity: 0.9;
+            animation: subtitlePulse 3s ease-in-out infinite;
+        }
+
+        @keyframes subtitlePulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        .category {
+            background: linear-gradient(135deg, 
+                rgba(184, 148, 31, 0.05) 0%, 
+                rgba(184, 148, 31, 0.02) 100%);
+            border: 1px solid rgba(184, 148, 31, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            color: #e4dcc5;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(184, 148, 31, 0.1), 
+                transparent
+            );
+            transition: left 0.5s ease;
+        }
+
+        .category:hover::before {
+            left: 100%;
+        }
+
+        .category:hover {
+            background: linear-gradient(135deg, 
+                rgba(184, 148, 31, 0.08) 0%, 
+                rgba(184, 148, 31, 0.04) 100%);
+            border-color: rgba(184, 148, 31, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3),
+                        0 0 25px rgba(184, 148, 31, 0.15);
+        }
+
+        .category:active {
+            transform: translateY(-1px);
+            transition: transform 0.1s ease;
+        }
+
+        .category-title {
+            color: #d4b150;
+            font-size: 20px;
+            margin-bottom: 8px;
+            font-weight: normal;
+            letter-spacing: 1px;
+            position: relative;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .category-title::after {
+            content: '›';
+            position: absolute;
+            right: -25px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            color: #b8941f;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .category:hover .category-title::after {
+            opacity: 1;
+            right: -30px;
+        }
+
+        .category > div:not(.category-title):not(.ritual-list) {
+            color: #b8941f;
+            font-size: 14px;
+            opacity: 0.9;
+            transition: all 0.3s ease;
+        }
+
+        .category:hover > div:not(.category-title):not(.ritual-list) {
+            opacity: 1;
+            transform: translateX(3px);
+        }
+
+        .ritual-list {
+            display: none;
+            margin-top: 15px;
+            border-top: 1px solid rgba(184, 148, 31, 0.2);
+            padding-top: 15px;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ritual-item {
+            background: linear-gradient(135deg, 
+                rgba(15, 12, 0, 0.6) 0%, 
+                rgba(184, 148, 31, 0.05) 100%);
+            border: 1px solid rgba(184, 148, 31, 0.15);
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin: 8px 0;
+            color: #e4dcc5;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ritual-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: #d4b150;
+            transform: scaleY(0);
+            transition: transform 0.25s ease;
+        }
+
+        .ritual-item:hover {
+            background: linear-gradient(135deg, 
+                rgba(184, 148, 31, 0.1) 0%, 
+                rgba(184, 148, 31, 0.05) 100%);
+            border-color: rgba(184, 148, 31, 0.4);
+            transform: translateX(3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .ritual-item:hover::before {
+            transform: scaleY(1);
+        }
+
+        .ritual-item:active {
+            transform: translateX(2px) scale(0.99);
+            transition: transform 0.1s ease;
+        }
+
+        .golden-accent {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, 
+                transparent, 
+                #b8941f, 
+                #d4b150, 
+                #b8941f, 
+                transparent
+            );
+            background-size: 200% 100%;
+            opacity: 0.6;
+            animation: accentFlow 4s ease-in-out infinite;
+        }
+
+        @keyframes accentFlow {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .hieroglyph-decoration {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            color: #b8941f;
+            opacity: 0.2;
+            font-size: 14px;
+            letter-spacing: 8px;
+            animation: slowRotate 20s linear infinite;
+        }
+
+        @keyframes slowRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 360px) {
+            .container {
+                padding: 20px 15px;
+                margin-top: 30px;
+            }
+            
+            .header h1 {
+                font-size: 36px;
+            }
+            
+            .category {
+                padding: 15px;
+            }
+            
+            .splash-logo img {
+                width: 120px;
+                height: 120px;
+            }
+            
+            body::before {
+                font-size: 100px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            body {
+                padding: 30px;
+                align-items: center;
+            }
+            
+            .container {
+                padding: 35px 30px;
+                max-width: 750px;
+                margin-top: 60px;
+            }
+            
+            .header h1 {
+                font-size: 48px;
+            }
+            
+            .category {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-particles" id="particles"></div>
+
+    <div id="splash-screen">
+        <div class="splash-logo">
+            <img src="images/Zone.png" alt="Zone">
+        </div>
+    </div>
+
+    <div class="container" id="main-app">
+        <div class="golden-accent"></div>
+        <div class="egyptian-border"></div>
+        <div class="hieroglyph-decoration">𓂀𓁟𓁩𓆣𓋹</div>
+        
+        <div class="header">
+            <h1>Zone</h1>
+            <p>Sacred Rituals Collection</p>
+        </div>
+
+        <!-- Gods -->
+        <div class="category" onclick="toggleList('gods-list')">
+            <div class="category-title">Gods</div>
+            <div>Power Rituals</div>
+            <div class="ritual-list" id="gods-list">
+                <div class="ritual-item" onclick="openRitual('pages/Zeus.html')">Grand Ritual of Zeus</div>
+                <div class="ritual-item" onclick="openRitual('pages/Astarte.html')">Astarte's power Ritual</div>
+                <div class="ritual-item" onclick="openRitual('pages/Azazel.html')">Azazel's power Ritual</div>
+                <div class="ritual-item" onclick="openRitual('pages/Abrasax.html')">Abrasax's power Ritual</div>
+                <div class="ritual-item" onclick="openRitual('pages/Valefor.html')">Valefor's power Ritual</div>
+                <div class="ritual-item" onclick="openRitual('pages/Andras.html')">Andras's power Ritual</div>
+                <div class="ritual-item" onclick="openRitual('pages/Janus.html')">Janus's power Ritual</div>
+                <div class="ritual-item" onclick="openRitual('pages/Marbas.html')">Marbas's power Ritual</div>
+                <div class="ritual-item" onclick="openRitual('pages/Orobas.html')">Orobas's power Ritual</div>
+                <div class="ritual-item" onclick="openRitual('pages/Neberius.html')">Neberius's power Ritual</div>
+                <div class="ritual-item" onclick="openRitual('pages/Amon Ra.html')">Amon Ra's power Ritual</div>
+                <div class="ritual-item" onclick="openRitual('pages/Set.html')">Set's power Ritual</div>
+                <div class="ritual-item" onclick="openRitual('pages/Thoth.html')">Thoth's power Ritual</div>
+                <div class="ritual-item" onclick="openRitual('pages/Anubis.html')">Anubis's power Ritual</div>
+                <div class="ritual-item" onclick="openRitual('pages/Lilith.html')">Lilith's power Ritual</div>
+                <div class="ritual-item" onclick="openRitual('pages/Furfur.html')">Furfur's power Ritual</div>
+                <div class="ritual-item" onclick="openRitual('pages/Focalor.html')">Focalor's power Ritual</div>
+                <div class="ritual-item" onclick="openRitual('pages/Balaam.html')">Balaam's power Ritual</div>
+                <div class="ritual-item" onclick="openRitual('pages/Maat.html')">Maat's power Ritual</div>
+                <div class="ritual-item" onclick="openRitual('pages/Dagan.html')">Dagan's power Ritual</div>
+                <div class="ritual-item" onclick="openRitual('pages/Mulciber.html')">Mulciber's power Ritual</div>
+                <div class="ritual-item" onclick="openRitual('pages/Asmodeus.html')">Asmodeus's power Ritual</div>
+                <div class="ritual-item" onclick="openRitual('pages/Alastor.html')">Alastor's power Ritual</div>
+                <div class="ritual-item" onclick="openRitual('pages/Adramalech.html')">Adramalech's power Ritual</div>
+                <div class="ritual-item" onclick="openRitual('pages/Agares.html')">Agares's power Ritual</div>
+                <div class="ritual-item" onclick="openRitual('pages/Eos.html')">Eos's power Ritual</div>
+                <div class="ritual-item" onclick="openRitual('pages/Zephyrus.html')">Zephyrus's power Ritual</div>
+                <div class="ritual-item" onclick="openRitual('pages/Asclepius.html')">Asclepius's power Ritual</div>
+                <div class="ritual-item" onclick="openRitual('pages/Raum.html')">Raum's power Ritual</div>
+                <div class="ritual-item" onclick="openRitual('pages/Bastet.html')">Bastet's power Ritual</div>
+                <div class="ritual-item" onclick="openRitual('pages/Seshat.html')">Seshat's power Ritual</div>
+                <div class="ritual-item" onclick="openRitual('pages/Sekhmet.html')">Sekhmet's power Ritual</div>
+                <div class="ritual-item" onclick="openRitual('pages/Nephthys.html')">Nephthys's power Ritual</div>
+                <div class="ritual-item" onclick="openRitual('pages/Eligos.html')">Eligos's power Ritual</div>
+                <div class="ritual-item" onclick="openRitual('pages/Forcas.html')">Forcas's power Ritual</div>
+                <div class="ritual-item" onclick="openRitual('pages/Osiris.html')">Osiris's power Ritual</div>
+                <div class="ritual-item" onclick="openRitual('pages/Hecate.html')">Hecate's power Ritual</div>
+            </div>
+        </div>
+
+        <!-- Heroes -->
+        <div class="category" onclick="toggleList('heroes-list')">
+            <div class="category-title">Heroes</div>
+            <div>Apotheosis and Ancestral Rituals</div>
+            <div class="ritual-list" id="heroes-list">
+                <div class="ritual-item" onclick="openRitual('pages/HPS_maxine.html')">HPS Maxine Apotheosis Ritual</div>
+                <div class="ritual-item" onclick="openRitual('pages/Ancestors.html')">Ritual of the Great Ancestors</div>
+            </div>
+        </div>
+
+        <!-- Psalm -->
+        <div class="category" onclick="toggleList('psalm-list')">
+            <div class="category-title">Psalm</div>
+            <div>Satan's Glory and Blessings</div>
+            <div class="ritual-list" id="psalm-list">
+                <div class="ritual-item" onclick="openRitual('pages/Satan_psalm.html')">Satan's Psalm 1 Glory and Blessing for The Great Satan</div>
+            </div>
+        </div>
+
+        <!-- Blessing -->
+        <div class="category" onclick="toggleList('blessing-list')">
+            <div class="category-title">Blessing</div>
+            <div>Community and Personal Blessings</div>
+            <div class="ritual-list" id="blessing-list">
+                <div class="ritual-item" onclick="openRitual('pages/Community_Blessing.html')">Community Blessing For Every Spiritual Satanist</div>
+                <div class="ritual-item" onclick="openRitual('pages/Blessing_employment.html')">Blessings For Employment, Financial Safety & Protection</div>
+                <div class="ritual-item" onclick="openRitual('pages/white_race.html')">White Race Awakening</div>
+                <div class="ritual-item" onclick="openRitual('pages/ToZ_protection.html')">ToZ protection</div>
+                <div class="ritual-item" onclick="openRitual('pages/wealth.html')">Wealth And Prosperity</div>
+            </div>
+        </div>
+
+        <!-- RTR -->
+        <div class="category" onclick="toggleList('rtr-list')">
+            <div class="category-title">RTR</div>
+            <div>Final RTR</div>
+            <div class="ritual-list" id="rtr-list">
+                <div class="ritual-item" onclick="openRitual('pages/frtr.html')">Final RTR</div>
+            </div>
+        </div>
+
+        <!-- Theurgy -->
+        <div class="category" onclick="toggleList('theurgy-list')">
+            <div class="category-title">Theurgy</div>
+            <div>Grand Ritual Practices</div>
+            <div class="ritual-list" id="theurgy-list">
+                <div class="ritual-item" onclick="openRitual('pages/TheGrandRitual.html')">The Grand Ritual</div>
+            </div>
+        </div>
+
+        <!-- Create Ritual -->
+        <div class="category" onclick="openRitual('create_ritual.html')">
+            <div class="category-title">Create Ritual</div>
+            <div>Build Your Custom Ritual</div>
+        </div>
+
+        <!-- Calendar -->
+        <div class="category" onclick="openRitual('calendar.html')">
+            <div class="category-title">Calendar</div>
+            <div>Sacred Dates and Times</div>
+        </div>
+    </div>
+
+    <script>
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (3 + Math.random() * 4) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        setTimeout(() => {
+            document.getElementById('splash-screen').style.display = 'none';
+            document.getElementById('main-app').style.display = 'block';
+        }, 3000);
+
+        function toggleList(listId) {
+            const list = document.getElementById(listId);
+            const allLists = document.querySelectorAll('.ritual-list');
+            
+            allLists.forEach(otherList => {
+                if (otherList.id !== listId) {
+                    otherList.style.display = 'none';
+                }
+            });
+            
+            list.style.display = list.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function openRitual(page) {
+            window.location.href = page;
+        }
+
+        createParticles();
+        document.addEventListener('touchstart', function() {}, {passive: true});
+    </script>
+</body>
+</html>
