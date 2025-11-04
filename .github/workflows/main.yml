@@ -1,0 +1,58 @@
+name: Build Blessing APK
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install Cordova
+      run: |
+        npm install -g cordova
+        
+    - name: Create Cordova Project
+      run: |
+        cordova create app com.zevist.blessing "BLESSING"
+        cd app
+        # کپی کردن فایل HTML اصلی
+        cp ../index.html www/
+        # ایجاد پوشه images
+        mkdir -p www/images
+        
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+      
+    - name: Accept Android Licenses
+      run: |
+        yes | sdkmanager --licenses || true
+        
+    - name: Add Android Platform
+      run: |
+        cd app
+        cordova platform add android@13.0.0
+      
+    - name: Build APK
+      run: |
+        cd app
+        cordova build android --release
+      
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: blessing-app-apk
+        path: app/platforms/android/app/build/outputs/apk/release/*.apk
+        retention-days: 90
